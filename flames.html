@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FLAMES Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg,powderblue);
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 26px;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: black;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 10px;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color:black;
+    }
+
+    #result {
+      margin-top: 20px;
+      color:green;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 12px;
+      transition: all 0.4s ease;
+    }
+
+    canvas.confetti-canvas {
+      position: fixed;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>💞 Flames Relationship Checker 💞</h2>
+    
+    <input type="text" id="name1" placeholder="Enter First Name">
+    <input type="text" id="name2" placeholder="Enter Second Name"><br>
+    <button onclick="calculateFLAMES()">Check Relationship</button>
+    
+    <div id="result"></div>
+  </div>
+
+  <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    function calculateFLAMES() {
+      const name1 = document.getElementById('name1').value.toLowerCase().replace(/\s/g, '');
+      const name2 = document.getElementById('name2').value.toLowerCase().replace(/\s/g, '');
+
+      const resultBox = document.getElementById('result');
+
+      if (!name1 || !name2) {
+        resultBox.innerText = "⚠️ Please enter both names!";
+        resultBox.style.backgroundColor = "#ffe0e0";
+        resultBox.style.color = "#cc0000";
+        return;
+      }
+
+      let nameA = name1.split('');
+      let nameB = name2.split('');
+
+      for (let i = 0; i < nameA.length; i++) {
+        const index = nameB.indexOf(nameA[i]);
+        if (index !== -1) {
+          nameA.splice(i, 1);
+          nameB.splice(index, 1);
+          i--;
+        }
+      }
+
+      const count = nameA.length + nameB.length;
+      const flames = ['F', 'L', 'A', 'M', 'E', 'S'];
+      const meanings = {
+        F: "👬 Friends",
+        L: "❤️ Love",
+        A: "😊 Affection",
+        M: "💍 Marriage",
+        E: "😡 Enemies",
+        S: "👧 Siblings"
+      };
+
+      const colors = {
+        F: { bg: "#d4f4dd", color: "#218c28" },
+        L: { bg: "#ffd4dd", color: "#d12f50" },
+        A: { bg: "#fff4c2", color: "#b48b00" },
+        M: { bg: "#e0ccff", color: "#6a0dad" },
+        E: { bg: "#ffd6d6", color: "#cc0000" },
+        S: { bg: "#d9f0ff", color: "#0077b6" }
+      };
+
+      let index = 0;
+      while (flames.length > 1) {
+        index = (index + count - 1) % flames.length;
+        flames.splice(index, 1);
+      }
+
+      const finalChar = flames[0];
+      const resultText = "Your relationship is: " + meanings[finalChar];
+
+      resultBox.innerText = resultText;
+      resultBox.style.backgroundColor = colors[finalChar].bg;
+      resultBox.style.color = colors[finalChar].color;
+
+      // 🎉 Confetti animation
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+    }
+  </script>
+
+</body>
+</html>
